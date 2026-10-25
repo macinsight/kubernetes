@@ -1,0 +1,26 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: argocd
+  namespace: argocd
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`argocd.macinsight.net`) && Header(`Content-Type`, `application/grpc`)
+      kind: Rule
+      priority: 20
+      services:
+        - name: argocd-server
+          port: 80
+          scheme: h2c
+    - match: Host(`argocd.macinsight.net`)
+      kind: Rule
+      priority: 10
+      services:
+        - name: argocd-server
+          port: 80
+  tls:
+    certResolver: ""
+    domains:
+      - main: argocd.macinsight.net
