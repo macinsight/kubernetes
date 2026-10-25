@@ -127,7 +127,7 @@ kubectl rollout status deployment/argocd-server \
 
 echo "==> Registering public Git repository"
 
-GIT_REPO_URL="https://github.com/USERNAME/REPOSITORY.git"
+GIT_REPO_URL="https://github.com/macinsight/kubernetes.git"
 
 kubectl create secret generic git-repository \
   --namespace argocd \
