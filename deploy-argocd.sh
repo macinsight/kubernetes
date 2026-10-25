@@ -125,6 +125,24 @@ kubectl rollout restart deployment/argocd-server -n argocd
 kubectl rollout status deployment/argocd-server \
   -n argocd --timeout=300s
 
+echo "==> Registering public Git repository"
+
+GIT_REPO_URL="https://github.com/USERNAME/REPOSITORY.git"
+
+kubectl create secret generic git-repository \
+  --namespace argocd \
+  --from-literal=type=git \
+  --from-literal=url="$GIT_REPO_URL" \
+  --dry-run=client -o yaml |
+  kubectl apply -f -
+
+kubectl label secret git-repository \
+  --namespace argocd \
+  argocd.argoproj.io/secret-type=repository \
+  --overwrite
+
+echo "==> Public Git repository registered: ${GIT_REPO_URL}"
+
 echo "==> Creating public HTTPS Ingress"
 
 kubectl apply -f - <<EOF
